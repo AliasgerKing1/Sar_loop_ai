@@ -1,9 +1,12 @@
 import './App.css';
 
-import Loop_ai_routes from "./routes/Loop_ai_routes"
+import LoopAiRoutes from "./routes/LoopAiRoutes";
+
 function App() {
   return (
-<Loop_ai_routes/>
+<>
+<LoopAiRoutes/>
+</>
   );
 }
 
