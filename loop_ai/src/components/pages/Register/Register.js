@@ -11,115 +11,132 @@ import Password from '../../shared/Inputtypes/Password';
 import CheckBox from "../../shared/Inputtypes/CheckBox"
 import FormErrors from '../../shared/FormError/FormError';
 
+import Footer from '../../shared/Footer/Footer';
+import AuthHeader from '../../shared/AuthHeader/AuthHeader';
+import SocialButton from "../../shared/SocialButton/SocialButton"
+import { addUser } from '../../../services/UserService/UserService';
+
 const initialValues = {
-    fname : "",
-    lname : "",
+    username : "",
     email : "",
     password : "",
     confPass : "",
-    terms : "",
 }
 const Register = () => {
-    
   let {values , handleBlur,handleSubmit,handleChange,touched,errors} = useFormik({
     initialValues : initialValues,
     validationSchema : registerSchema,
     onSubmit : () => {
-        console.log(values)
+        addUser(values).then(result=> {
+            console.log(result.data)
+        });
     }
   })
-    
   return (
     <>
-        <div className="sticky-header">
-    <a href="#wrapper" data-type="section-switch" className="scrollup">
-        <i className="icofont-bubble-up"></i>
-    </a>
-    {/* <!-- Preloader Start Here --> */}
-    {/* <div id="preloader"></div> */}
-    {/* <!-- Preloader End Here --> */}
-    <div id="wrapper" className="wrapper overflow-hidden">
-
-        {/* <!--=====================================-->
-        <!--=          Header Menu Start       	=-->
-        <!--=====================================--> */}
-        <div className="login-page-wrap">
-            <div className="content-wrap">
-                <div className="login-content">
-                    <div className="login-form-wrap">
-                        <ul className="nav nav-tabs" role="tablist">
-                            <li className="nav-item">
-                                <NavLink className="nav-link" data-toggle="tab" to="/" role="tab" aria-selected="true"><i className="icofont-users-alt-4"></i> Sign In </NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink className="nav-link active" data-toggle="tab" to="/register" role="tab" aria-selected="false"><i className="icofont-download"></i> Registration</NavLink>
-                            </li>
-                        </ul>
-                        <div className="tab-content">
-                            <div className="tab-pane registration-tab fade show active" role="tabpanel">
-                                <h3 className="item-title">Sign Up Your Account</h3>
-                                <form onSubmit={handleSubmit}>
-                                    <div className="form-group">
-                                        <Text name={"fname"} classes={"form-control " + (errors.fname && touched.fname ? "is-invalid" : "")} placeholder={"First Name"} change={handleChange} blur={handleBlur} autoComplete="off" />
-                                        <FormErrors errMsg={errors.fname} touched={touched.fname}/>
-                                    </div>
-                                    <div className="form-group">
-                                        <Text name={"lname"} classes={"form-control " + (errors.lname && touched.lname ? "is-invalid" : "")} placeholder={"Last Name"} change={handleChange} blur={handleBlur} autoComplete="off" />
-                                        <FormErrors errMsg={errors.lname} touched={touched.lname}/>
-                                    </div>
-                                    <div className="form-group">
-                                        <Email name="email" autoComplete="off" placeholder="E-mail" change={handleChange} blur={handleBlur} classes={"form-control " + (errors.email && touched.email ? "is-invalid" : "")}/>
-                                        <FormErrors errMsg={errors.email} touched={touched.email}/>
-                                    </div>
-                                    <div className="form-group">
-                                        <Password name="password" autoComplete="off" placeholder="Type Password" change={handleChange} blur={handleBlur} classes={"form-control " + (errors.password && touched.password ? "is-invalid" : "")} />
-                                        <FormErrors errMsg={errors.password} touched={touched.password}/>
-                                    </div>
-                                    <div className="form-group">
-                                        <Password name="confPass" autoComplete="off" placeholder="Type Confirm Password" change={handleChange} blur={handleBlur} classes={"form-control " + (errors.confPass && touched.confPass ? "is-invalid" : "")}/>
-                                        <FormErrors errMsg={errors.confPass} touched={touched.confPass}/>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="form-check mb-3">
-                                            <input type="checkbox" className="form-check-input" id="validationFormCheck1" />
-                                            {/* <FormErrors errMsg={errors.terms} touched={touched.terms}/> */}
-                                            <label className="form-check-label" htmlFor="validationFormCheck1">I accept the <a href="#">Terms and Conditions</a></label>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <button type="submit" name="registration" className="submit-btn" style={{textAlign : "center"}}>Complete Registration</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="map-line">
-                    <img src="/assets/media/banner/map_line.png" alt="map" />
-                    <ul className="map-marker">
-                        <li><img src="/assets/media/banner/marker_1.png" alt="marker" /></li>
-                        <li><img src="/assets/media/banner/marker_2.png" alt="marker" /></li>
-                        <li><img src="/assets/media/banner/marker_3.png" alt="marker" /></li>
-                        <li><img src="/assets/media/banner/marker_4.png" alt="marker" /></li>
-                    </ul>
-                </div>
+    <div className="auth-page-wrapper pt-5">
+        {/* <!-- auth page bg --> */}
+        <div className="auth-one-bg-position auth-one-bg" id="auth-particles">
+            <div className="bg-overlay"></div>
+            <div className="shape">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120">
+      <path d="M0 36c144 17.6 432 87.2 720 88 288 .8 576-67.2 720-84v100H0z"></path>
+    </svg>
             </div>
         </div>
-{/* 
-        <!--=====================================-->
-        <!--=      Header Search Start          =-->
-        <!--=====================================--> */}
-        <div id="header-search" className="header-search">
-            <button type="button" className="close">×</button>
-            <form className="header-search-form">
-                <input type="search" defualtvalue="" placeholder="Search here..." />
-                <button type="submit" className="search-btn">
-                    <i className="flaticon-search"></i>
-                </button>
-            </form>
+
+        {/* <!-- auth page content --> */}
+        <div className="auth-page-content">
+            <div className="container">
+                <AuthHeader/>
+
+                <div className="row justify-content-center">
+                    <div className="col-md-8 col-lg-6 col-xl-5">
+                        <div className="card mt-4">
+
+                            <div className="card-body p-4">
+                                <div className="text-center mt-2">
+                                    <h5 className="text-primary">Create New Account</h5>
+                                    <p className="text-muted">Get your free velzon account now</p>
+                                </div>
+                                <div className="p-2 mt-4">
+                                    <form onSubmit={handleSubmit}>
+                                        <div className="mb-3">
+                                            <label htmlFor="useremail" className="form-label">Email <span className="text-danger">*</span></label>
+                                            <Email name={"email"} placeholder={"Enter email address"} change={handleChange} blur={handleBlur} classes={"form-control " + (errors.email && touched.email ? "is-invalid" : "")}/>
+<FormErrors errMsg={errors.email} touched={touched.email} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="username" className="form-label">Username <span className="text-danger">*</span></label>
+                                            <Text name={"username"} placeholder={"Enter username"} change={handleChange} blur={handleBlur} classes={"form-control " + (errors.username && touched.username ? "is-invalid" : "")}/>
+<FormErrors errMsg={errors.username} touched={touched.username}/>
+                                        </div>
+
+                                        <div className="mb-3">
+                                            <label className="form-label" htmlFor="password-input">Password</label>
+                                            <div className="position-relative auth-pass-inputgroup">
+                                            <Password name={"password"} autoComplete="off" placeholder={"Enter password" } id="password-input" onpaste="return false" aria-describedby="passwordInput" change={handleChange} blur={handleBlur} classes={"form-control pe-5 password-input " + (errors.password && touched.password ? "is-invalid" : "")} />
+                  <FormErrors errMsg={errors.password} touched={touched.password}/>
+                                                <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i className="ri-eye-fill align-middle"></i></button>
+                                            </div>
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label" htmlFor="password-input">Password</label>
+                                            <div className="position-relative auth-pass-inputgroup">
+                                            <Password name={"confPass"} autoComplete="off" placeholder={"Enter Confirm password" } id="password-input" onpaste="return false" aria-describedby="passwordInput" change={handleChange} blur={handleBlur} classes={"form-control pe-5 password-input " + (errors.confPass && touched.confPass ? "is-invalid" : "")} />
+                  <FormErrors errMsg={errors.confPass} touched={touched.confPass}/>
+                                                <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i className="ri-eye-fill align-middle"></i></button>
+                                            </div>
+                                        </div>
+
+                                        <div className="mb-4">
+                                            <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Velzon <a href="#" className="text-primary text-decoration-underline fst-normal fw-medium">Terms of Use</a></p>
+                                        </div>
+
+                                        <div id="password-contain" className="p-3 bg-light mb-2 rounded">
+                                            <h5 className="fs-13">Password must contain:</h5>
+                                            <p id="pass-length" className="invalid fs-12 mb-2">Minimum <b>8 characters</b></p>
+                                            <p id="pass-lower" className="invalid fs-12 mb-2">At <b>lowercase</b> letter (a-z)</p>
+                                            <p id="pass-upper" className="invalid fs-12 mb-2">At least <b>uppercase</b> letter (A-Z)</p>
+                                            <p id="pass-number" className="invalid fs-12 mb-0">A least <b>number</b> (0-9)</p>
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <button className="btn btn-success w-100" type="submit">Sign Up</button>
+                                        </div>
+
+                                        <div className="mt-4 text-center">
+                                            <div className="signin-other-title">
+                                                <h5 className="fs-13 mb-4 title text-muted">Create account with</h5>
+                                            </div>
+
+                                            <SocialButton/>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                            {/* <!-- end card body --> */}
+                        </div>
+                        {/* <!-- end card --> */}
+
+                        <div className="mt-4 text-center">
+                            <p className="mb-0">Already have an account ? <NavLink to="/" className="fw-semibold text-primary text-decoration-underline"> Signin </NavLink> </p>
+                        </div>
+
+                    </div>
+                </div>
+                {/* <!-- end row --> */}
+            </div>
+            {/* <!-- end container --> */}
         </div>
+        {/* <!-- end auth page content --> */}
+
+   <Footer/>
     </div>
-    </div>
+    {/* <!-- end auth-page-wrapper --> */}
+
+
     </>
   )
 }

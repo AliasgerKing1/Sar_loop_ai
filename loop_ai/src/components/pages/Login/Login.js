@@ -1,91 +1,94 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+
+import AuthHeader from '../../shared/AuthHeader/AuthHeader'
+import Footer from '../../shared/Footer/Footer'
+import SocialButton from "../../shared/SocialButton/SocialButton"
+
 const Login = () => {
   return (
     <>
-<div className="sticky-header">
-    <a href="#wrapper" data-type="section-switch" className="scrollup">
-        <i className="icofont-bubble-up"></i>
-    </a>
-    {/* <!-- Preloader Start Here --> */}
-    {/* <div id="preloader"></div> */}
-    {/* <!-- Preloader End Here --> */}
-    <div id="wrapper" className="wrapper overflow-hidden">
-
-        {/* <!--=====================================-->
-        <!--=          Header Menu Start       	=-->
-        <!--=====================================--> */}
-        <div className="login-page-wrap">
-            <div className="content-wrap">
-                <div className="login-content">
-                    {/* <div className="item-logo">
-                        <a href="#"><img src="./assets/media/logo_large.png" alt="logo" /></a>
-                    </div> */}
-                    <div className="login-form-wrap">
-                        <ul className="nav nav-tabs" role="tablist">
-                            <li className="nav-item">
-                                <NavLink className="nav-link" data-toggle="tab" to="/" role="tab" aria-selected="true"><i className="icofont-users-alt-4"></i> Sign In </NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink className="nav-link" data-toggle="tab" to="/register"  role="tab" aria-selected="false"><i className="icofont-download"></i> Registration</NavLink>
-                            </li>
-                        </ul>
-                        <div className="tab-content">
-                                <form>
-                            <div className="tab-pane login-tab fade show active" role="tabpanel">
-                                <h3 className="item-title">Sign Into <span>Your Account</span></h3>
-                                <div className="google-signin">
-                                    <a href="#"><img src="/assets/media/figure/google-icon.png" alt="Google" />Google Sign in</a>
-                                </div>
-                                    <div className="form-group">
-                                        <input type="text" className="form-control" name="login-email" placeholder="Your E-mail" />
-                                    </div>
-                                    <div className="form-group">
-                                        <input type="password" className="form-control" name="login-password" placeholder="Password" />
-                                    </div>
-                                    <div className="form-group reset-password">
-                                        <a href="#">* Reset Password</a>
-                                    </div>
-                                    <div className="form-group mb-4">
-                                        <div className="form-check">
-                                            <input type="checkbox" className="form-check-input" id="validationFormCheck2" />
-                                            <label className="form-check-label" htmlFor="validationFormCheck2"><a href='#'>Keep me as signed in</a></label>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <input type="submit" name="login-btn" className="submit-btn" defualtvalue="Login" />
-                                    </div>
-                            </div>
-                                </form>
-                        </div>
-                    </div>
-                </div>
-                <div className="map-line">
-                    <img src="/assets/media/banner/map_line.png" alt="map" />
-                    <ul className="map-marker">
-                        <li><img src="/assets/media/banner/marker_1.png" alt="marker" /></li>
-                        <li><img src="/assets/media/banner/marker_2.png" alt="marker" /></li>
-                        <li><img src="/assets/media/banner/marker_3.png" alt="marker" /></li>
-                        <li><img src="/assets/media/banner/marker_4.png" alt="marker" /></li>
-                    </ul>
-                </div>
+    <div className="auth-page-wrapper pt-5">
+        {/* <!-- auth page bg --> */}
+        <div className="auth-one-bg-position auth-one-bg" id="auth-particles">
+            <div className="bg-overlay"></div>
+            <div className="shape">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120">
+      <path d="M0 36c144 17.6 432 87.2 720 88 288 .8 576-67.2 720-84v100H0z"></path>
+    </svg>
             </div>
         </div>
-{/* 
-        <!--=====================================-->
-        <!--=      Header Search Start          =-->
-        <!--=====================================--> */}
-        <div id="header-search" className="header-search">
-            <button type="button" className="close">×</button>
-            <form className="header-search-form">
-                <input type="search" defualtvalue="" placeholder="Search here..." />
-                <button type="submit" className="search-btn">
-                    <i className="flaticon-search"></i>
-                </button>
-            </form>
+
+        {/* <!-- auth page content --> */}
+        <div className="auth-page-content">
+            <div className="container">
+              <AuthHeader/>
+
+                <div className="row justify-content-center">
+                    <div className="col-md-8 col-lg-6 col-xl-5">
+                        <div className="card mt-4">
+
+                            <div className="card-body p-4">
+                                <div className="text-center mt-2">
+                                    <h5 className="text-primary">Welcome Back !</h5>
+                                    <p className="text-muted">Sign in to continue to Velzon.</p>
+                                </div>
+                                <div className="p-2 mt-4">
+                                    <form action="https://themesbrand.com/velzon/html/modern/index.html">
+
+                                        <div className="mb-3">
+                                            <label htmlFor="username" className="form-label">Username</label>
+                                            <input type="text" className="form-control" id="username" placeholder="Enter username" />
+                                        </div>
+
+                                        <div className="mb-3">
+                                            <div className="float-end">
+                                                <a href="auth-pass-reset-basic.html" className="text-muted">Forgot password?</a>
+                                            </div>
+                                            <label className="form-label" htmlFor="password-input">Password</label>
+                                            <div className="position-relative auth-pass-inputgroup mb-3">
+                                                <input type="password" className="form-control pe-5 password-input" placeholder="Enter password" id="password-input" />
+                                                <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i className="ri-eye-fill align-middle"></i></button>
+                                            </div>
+                                        </div>
+
+                                        <div className="form-check">
+                                            <input className="form-check-input" type="checkbox" value="" id="auth-remember-check" />
+                                            <label className="form-check-label" htmlFor="auth-remember-check">Remember me</label>
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <button className="btn btn-success w-100" type="submit">Sign In</button>
+                                        </div>
+
+                                        <div className="mt-4 text-center">
+                                            <div className="signin-other-title">
+                                                <h5 className="fs-13 mb-4 title">Sign In with</h5>
+                                            </div>
+                                            <SocialButton/>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            {/* <!-- end card body --> */}
+                        </div>
+                        {/* <!-- end card --> */}
+
+                        <div className="mt-4 text-center">
+                            <p className="mb-0">Don't have an account ? <NavLink to="/register" className="fw-semibold text-primary text-decoration-underline"> Signup </NavLink> </p>
+                        </div>
+
+                    </div>
+                </div>
+                {/* <!-- end row --> */}
+            </div>
+            {/* <!-- end container --> */}
         </div>
+        {/* <!-- end auth page content --> */}
+
+<Footer/>
     </div>
-    </div>
+    {/* <!-- end auth-page-wrapper --> */}
     </>
   )
 }
