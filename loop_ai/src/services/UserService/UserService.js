@@ -5,4 +5,7 @@ let addUser = (obj) => {
     return axios.post(apiUrl, obj)
 }
 
-export {addUser}
+let delUser = () => {
+    return axios.delete(apiUrl)
+}
+export {addUser, delUser}

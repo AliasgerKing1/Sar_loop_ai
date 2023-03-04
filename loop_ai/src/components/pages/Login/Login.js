@@ -1,11 +1,55 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom'
+import {useFormik} from "formik"
+import LoginSchema from '../../../Scehmas/LoginSchema';
+
+import Email from '../../shared/Inputtypes/Email';
+import Password from '../../shared/Inputtypes/Password';
+
+import {AlertDanger} from "../../../shared/Alerts/Alerts"
 
 import AuthHeader from '../../shared/AuthHeader/AuthHeader'
 import Footer from '../../shared/Footer/Footer'
 import SocialButton from "../../shared/SocialButton/SocialButton"
+import FormErrors from '../../shared/FormError/FormError';
 
+import { DoLogin } from '../../../services/UserService/LoginAuthService/LoginAuthService';
+import { delUser } from '../../../services/UserService/UserService';
+const initialValues = {
+    email : "",
+    password : "",
+}
 const Login = () => {
+    let navigate = useNavigate();
+    let [showSpinner, setShowSpinner] = useState(false);
+    let [showAlert, setShowAlert] = useState(false);
+let [msg, setMsg] = useState("");
+    let {values, handleBlur, handleChange, handleSubmit, errors, touched} = useFormik({
+   initialValues : initialValues,
+   validationSchema : LoginSchema,
+    onSubmit : ()=> {
+        setShowSpinner(true);
+    DoLogin(values).then(result=> {
+                        if (result.data.errType === 1) {
+                            setMsg("This email/username or password is incorrect !");
+                            setShowAlert(true);
+                        }
+                        if (result.data.errType === 2) {
+                            setMsg("This Password is incorrect !");
+                            setShowAlert(true);
+                        }
+                        if(result.data.status === 200) {
+                            localStorage.setItem("token", result.data.token);
+                            navigate("/auth/home")
+                }
+            })
+        }
+      })
+      let del = () => {
+delUser().then(result=> {
+    console.log(result.data)
+});
+      }
   return (
     <>
     <div className="auth-page-wrapper pt-5">
@@ -34,11 +78,12 @@ const Login = () => {
                                     <p className="text-muted">Sign in to continue to Velzon.</p>
                                 </div>
                                 <div className="p-2 mt-4">
-                                    <form action="https://themesbrand.com/velzon/html/modern/index.html">
+                                    <form onSubmit={handleSubmit}>
 
                                         <div className="mb-3">
                                             <label htmlFor="username" className="form-label">Username</label>
-                                            <input type="text" className="form-control" id="username" placeholder="Enter username" />
+                                            <Email name={"email"} placeholder={"Enter email address"} change={handleChange} blur={handleBlur} classes={"form-control " + (errors.email && touched.email ? "is-invalid" : "")}/>
+<FormErrors errMsg={errors.email} touched={touched.email} />
                                         </div>
 
                                         <div className="mb-3">
@@ -47,7 +92,8 @@ const Login = () => {
                                             </div>
                                             <label className="form-label" htmlFor="password-input">Password</label>
                                             <div className="position-relative auth-pass-inputgroup mb-3">
-                                                <input type="password" className="form-control pe-5 password-input" placeholder="Enter password" id="password-input" />
+                                            <Password name={"password"} autoComplete="off" placeholder={"Enter password" } id="password-input" onpaste="return false" aria-describedby="passwordInput" change={handleChange} blur={handleBlur} classes={"form-control pe-5 password-input " + (errors.password && touched.password ? "is-invalid" : "")} />
+                  <FormErrors errMsg={errors.password} touched={touched.password}/>
                                                 <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i className="ri-eye-fill align-middle"></i></button>
                                             </div>
                                         </div>
@@ -67,6 +113,9 @@ const Login = () => {
                                             </div>
                                             <SocialButton/>
                                         </div>
+                                        {
+                                        showAlert ? (<AlertDanger msg={msg} />) : ""
+                                      }
                                     </form>
                                 </div>
                             </div>
@@ -77,6 +126,7 @@ const Login = () => {
                         <div className="mt-4 text-center">
                             <p className="mb-0">Don't have an account ? <NavLink to="/register" className="fw-semibold text-primary text-decoration-underline"> Signup </NavLink> </p>
                         </div>
+                        {/* <button className='btn btn-primary' onClick={del}>hii</button> */}
 
                     </div>
                 </div>
@@ -85,7 +135,6 @@ const Login = () => {
             {/* <!-- end container --> */}
         </div>
         {/* <!-- end auth page content --> */}
-
 <Footer/>
     </div>
     {/* <!-- end auth-page-wrapper --> */}
