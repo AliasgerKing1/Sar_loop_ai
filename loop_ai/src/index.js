@@ -6,11 +6,25 @@ import reportWebVitals from './reportWebVitals';
 
 import { BrowserRouter } from 'react-router-dom';
 
+import UserReducer from './Redux/UserReducer';
+import AdminReducer from "./Redux/AdminReducer"
+import {configureStore,combineReducers} from "@reduxjs/toolkit"
+import {Provider} from "react-redux"
+
+let rootReducer = combineReducers({
+  UserReducer,
+  AdminReducer
+})
+let store = configureStore({
+  reducer : rootReducer
+})
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
   <BrowserRouter>
+  <Provider store={store}>
     <App />
+  </Provider>
   </BrowserRouter>
   </React.StrictMode>
 );

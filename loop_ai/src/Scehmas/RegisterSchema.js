@@ -6,6 +6,7 @@ const registerSchema = Yup.object({
     email : Yup.string().email("This email address is invalid").required("Enter your Email !"),
     password : Yup.string().min(8,"Password should have atleast 8 character").required("Enter your password !"),
     confPass : Yup.string().required("Enter your confirm password").oneOf([Yup.ref("password"), null], "password and confirm passwors does nio match !"),
+    type : Yup.string().required("Select your Type")
 })
 
 export default registerSchema

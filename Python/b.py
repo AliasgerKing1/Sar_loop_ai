@@ -20,7 +20,7 @@ urls = [base_url]
 # use a loop to navigate to each page on the website and take a screenshot
 for url in urls:
     driver.get(url)
-    driver.save_screenshot(url.replace(base_url, '').replace('/', '') + '.png')
+    driver.save_screenshot(url.replace(base_url, '').replace('/', '') + 'image.png')
     links_container = driver.find_element_by_css_selector('body') # change this to the element that contains the links on your website
     links = links_container.find_elements_by_css_selector('a[href^="/"], a[href^="https://portotheme.com"]')
     for link in links:

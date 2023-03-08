@@ -1,22 +1,24 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom'
 import {useFormik} from "formik"
-import LoginSchema from '../../../Scehmas/LoginSchema';
 
-import Email from '../../../shared/Inputtypes/Email';
-import Password from '../../../shared/Inputtypes/Password';
+import AdminSchema from '../../../../Scehmas/AdminSchema';
 
-import {AlertDanger} from "../../../shared/Alerts/Alerts"
+// import Email from '../../../../shared/Inputtypes/Email';
+import Text from "../../../../shared/Inputtypes/Text"
+import Password from '../../../../shared/Inputtypes/Password';
 
-import AuthHeader from '../../shared/AuthHeader/AuthHeader'
-import Footer from '../../../shared/Footer/Footer'
-import SocialButton from "../../../shared/SocialButton/SocialButton"
-import FormErrors from '../../../shared/FormError/FormError';
+import {AlertDanger} from "../../../../shared/Alerts/Alerts"
 
-import { DoLogin } from '../../../services/LoginAuthService/LoginAuthService';
-import { delUser } from '../../../services/UserService/UserService';
+import AuthHeader from '../../../shared/AuthHeader/AuthHeader'
+import Footer from '../../../../shared/Footer/Footer'
+import SocialButton from "../../../../shared/SocialButton/SocialButton"
+import FormErrors from '../../../../shared/FormError/FormError';
+
+import { DoLogin } from '../../../../services/Adminauthservice/Adminauthservice';
+import { delUser } from '../../../../services/UserService/UserService';
 const initialValues = {
-    email : "",
+    username : "",
     password : "",
 }
 const Login = () => {
@@ -26,24 +28,26 @@ const Login = () => {
 let [msg, setMsg] = useState("");
     let {values, handleBlur, handleChange, handleSubmit, errors, touched} = useFormik({
    initialValues : initialValues,
-   validationSchema : LoginSchema,
-    onSubmit : ()=> {
-        setShowSpinner(true);
-    DoLogin(values).then(result=> {
-                        if (result.data.errType === 1) {
-                            setMsg("This email/username or password is incorrect !");
-                            setShowAlert(true);
-                        }
-                        if (result.data.errType === 2) {
-                            setMsg("This Password is incorrect !");
-                            setShowAlert(true);
-                        }
-                        if(result.data.status === 200) {
-                            localStorage.setItem("token", result.data.token);
-                            navigate("/auth/home")
-                }
-            })
+   validationSchema : AdminSchema,
+   onSubmit: (values) => {
+    setShowSpinner(true);
+    DoLogin(values)
+      .then((result) => {
+        if (result.data.errType === 1) {
+          setMsg("This email/username or password is incorrect !");
+          setShowAlert(true);
         }
+        if (result.data.errType === 2) {
+          setMsg("This Password is incorrect !");
+          setShowAlert(true);
+        }
+        if (result.data.status === 200) {
+          localStorage.setItem("Admintoken", result.data.Admintoken);
+          navigate("/admin/dashboard");
+        }
+      });
+  }
+  
       })
       let del = () => {
 delUser().then(result=> {
@@ -81,9 +85,9 @@ delUser().then(result=> {
                                     <form onSubmit={handleSubmit}>
 
                                         <div className="mb-3">
-                                            <label htmlFor="email" className="form-label">Email</label>
-                                            <Email name={"email"} placeholder={"Enter email address"} change={handleChange} blur={handleBlur} classes={"form-control " + (errors.email && touched.email ? "is-invalid" : "")}/>
-<FormErrors errMsg={errors.email} touched={touched.email} />
+                                            <label htmlFor="username" className="form-label">Username</label>
+                                            <Text name={"username"} placeholder={"Enter Username"} change={handleChange} blur={handleBlur} classes={"form-control " + (errors.username && touched.username ? "is-invalid" : "")}/>
+<FormErrors errMsg={errors.username} touched={touched.username} />
                                         </div>
 
                                         <div className="mb-3">

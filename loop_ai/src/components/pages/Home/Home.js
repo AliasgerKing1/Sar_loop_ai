@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import {NavLink} from "react-router-dom"
 
-import Footer from "../../shared/Footer/Footer"
+import Footer from "../../../shared/Footer/Footer"
 import GalleryTab from '../../shared/GalleryTab/GalleryTab'
 const Home = () => {
     let [nav1, setNav1] = useState(0)
@@ -1756,14 +1757,14 @@ const Home = () => {
                     <div className="row">
                         <div className="col-12">
                             <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                                <h4 className="mb-sm-0">Gallery</h4>
+                                <h4 className="mb-sm-0">Screeno</h4>
 
-                                <div className="page-title-right">
+                                {/* <div className="page-title-right">
                                     <ol className="breadcrumb m-0">
-                                        <li className="breadcrumb-item"><a href="#">Pages</a></li>
+                                        <li className="breadcrumb-item"><NavLink to="/home">Home</NavLink></li>
                                         <li className="breadcrumb-item active">Gallery</li>
                                     </ol>
-                                </div>
+                                </div> */}
 
                             </div>
                         </div>

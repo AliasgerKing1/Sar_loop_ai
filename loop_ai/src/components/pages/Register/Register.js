@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import {useFormik} from "formik"
 
 import registerSchema from '../../../Scehmas/RegisterSchema';
 
-import Text from '../../shared/Inputtypes/Text';
-import Email from '../../shared/Inputtypes/Email';
-import Password from '../../shared/Inputtypes/Password';
-import CheckBox from "../../shared/Inputtypes/CheckBox"
-import FormErrors from '../../shared/FormError/FormError';
+import Text from '../../../shared/Inputtypes/Text';
+import Email from '../../../shared/Inputtypes/Email';
+import Password from '../../../shared/Inputtypes/Password';
+import CheckBox from "../../../shared/Inputtypes/CheckBox"
+import FormErrors from '../../../shared/FormError/FormError';
 
-import Footer from '../../shared/Footer/Footer';
+import Footer from '../../../shared/Footer/Footer';
 import AuthHeader from '../../shared/AuthHeader/AuthHeader';
-import SocialButton from "../../shared/SocialButton/SocialButton"
+import SocialButton from "../../../shared/SocialButton/SocialButton"
 import { addUser } from '../../../services/UserService/UserService';
 
 const initialValues = {
@@ -21,14 +21,20 @@ const initialValues = {
     email : "",
     password : "",
     confPass : "",
+    join_date : "",
+    type : ""
 }
 const Register = () => {
+    let navigate = useNavigate();
   let {values , handleBlur,handleSubmit,handleChange,touched,errors} = useFormik({
     initialValues : initialValues,
     validationSchema : registerSchema,
     onSubmit : () => {
+        values.join_date = Date()
         addUser(values).then(result=> {
-            console.log(result.data)
+            if(result.data.success === true) {
+                navigate("/")
+            }
         });
     }
   })
@@ -87,6 +93,15 @@ const Register = () => {
                   <FormErrors errMsg={errors.confPass} touched={touched.confPass}/>
                                                 <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i className="ri-eye-fill align-middle"></i></button>
                                             </div>
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="type" className="form-label">Type</label>
+                                            <select name="type" id="" onChange={handleChange} onBlur={handleBlur} class={"form-control  " + (errors.type && touched.type ? "is-invalid" : "")}>
+                                                <option value="">Select</option>
+                                                <option value="designer">Designer</option>
+                                                <option value="developer">Developer</option>
+                                            </select>
+                                            <FormErrors errMsg={errors.type} touched={touched.type} />
                                         </div>
 
                                         <div className="mb-4">

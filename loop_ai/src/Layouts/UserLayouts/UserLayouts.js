@@ -4,7 +4,7 @@ const UserLayouts = () => {
   let navigate = useNavigate();
   useEffect(()=> {
     if(! localStorage.getItem("token")) {
-      navigate("/admin")
+      navigate("/")
       }
   })
 

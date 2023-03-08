@@ -1,4 +1,6 @@
 const routes = require("express").Router();
 
 routes.use("/api/user", require("../controllers/userController"));
-module.exports = routes;
+routes.use("/api/admin", require("../controllers/Admin/AdminController"));
+
+module.exports = routes
