@@ -24,9 +24,8 @@ const initialValues = {
     featured : "",
     quality : "",
     category : "",
-    keyword : [],
     upload_date : "",
-    upload : ""
+    image : ""
 }
 const AddScreenShot = () => {
     let navigate = useNavigate();
@@ -44,44 +43,41 @@ const AddScreenShot = () => {
       };
       
     let [showSpinner, setShowSpinner] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [data, setdata] = useState();
     let [showAlert, setShowAlert] = useState(false);
     let [msg, setMsg] = useState("");
-    let form = new FormData();
     let Image = (e) => {
-        form.append("photo",e.target.files[0]);
+        const selectedFiles = Array.from(e.target.files);
+        setFiles(selectedFiles);
     }
+    
     let {values, handleBlur, handleChange, handleSubmit, errors, touched} = useFormik({
    initialValues : initialValues,
    validationSchema : screenShotSchema,
    onSubmit: (values) => {
-    console.log('onSubmit called');
-    console.log('values before:', values);
     setShowSpinner(true);
-    values.upload_date = Date();
-    values.keyword = [...items]; // Add items to the keyword property
-    console.log('values after:', values);
-    console.log('items:', items);
-    DoLogin(values)
-    .then((result) => {
-        if (result.data.errType === 1) {
-            setMsg("This email/username or password is incorrect !");
-          setShowAlert(true);
-        }
-        if (result.data.errType === 2) {
-          setMsg("This Password is incorrect !");
-          setShowAlert(true);
-        }
-        if (result.data.status === 200) {
-          localStorage.setItem("Admintoken", result.data.Admintoken);
-          navigate("/admin/dashboard");
-        }
-      });
+    values.upload_date = Date().now();
+    // values.keyword = [...items]; // Add items to the keyword property
+    // console.log('values after:', values);
+    // console.log('items:', items);
+setdata(values)
   }
 })
-    let addImg = () => {
-        // form.append("data",JSON.stringify())
-        // addPhoto(form).then(result=> {
-        // })
+let addImg = () => {
+        let form = new FormData();
+        files.forEach((file) => {
+          form.append('files', file);
+        });
+        form.append("data",JSON.stringify(values))
+            addPhoto(form).then(result=> {
+if(result.data ) {
+    setTimeout(function() {
+        navigate("/admin/dashboard")
+      }, 2000); // 2000 milliseconds = 2 seconds
+      
+}
+            })
     }
     
   return (
@@ -121,7 +117,7 @@ const AddScreenShot = () => {
                         </div>
                     </div>
                     {/* <!-- end page title --> */}
-<form onSubmit={handleSubmit}>
+<form onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="card">
@@ -164,8 +160,8 @@ const AddScreenShot = () => {
                                 <div className="card-body">
                                     <div>
                                         <p className="text-muted">Add Attached files here.</p>
-
-                                        <div className="dropzone dz-clickable" style={errors.upload && touched.upload ? {border: '2px dashed #fa896b'} : {}}>
+                                        {/* style={errors.image && touched.image ? {border: '2px dashed #fa896b'} : {}} */}
+                                        <div className="dropzone dz-clickable">
                                             <div className="row">
                                                 <div className="col-md-4 offset-md-4">
                                                 <input type="file" multiple onChange={Image} />
@@ -179,7 +175,7 @@ const AddScreenShot = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <FormErrors errMsg={errors.upload} touched={touched.upload} />
+                                        {/* <FormErrors errMsg={errors.image} touched={touched.image} /> */}
 
                                         <ul className="list-unstyled mb-0" id="dropzone-preview">
                                             
@@ -233,14 +229,13 @@ const AddScreenShot = () => {
                                         </select>
                                         <FormErrors errMsg={errors.category} touched={touched.category} />
                                     </div>
-
-                                        <label htmlFor="choices-text-input" className="form-label">Keyword</label>
-    <div className="choices" data-type="text" aria-haspopup="true" aria-expanded="false">
-      <div className="choices__inner">
-      {/* name="keyword" 
+ {/* name="keyword" 
        + (errors.keyword && touched.keyword ? "is-invalid" : "")}
         
       */}
+                                        {/* <label htmlFor="choices-text-input" className="form-label">Keyword</label>
+    <div className="choices" data-type="text" aria-haspopup="true" aria-expanded="false">
+      <div className="choices__inner">
       <input
   type="text"
   value={inputValue}
@@ -282,7 +277,7 @@ const AddScreenShot = () => {
         <div className="choices__item choices__item--choice">Press Enter to add <b>"{inputValue}"</b></div>
       </div>
     </div>
-    {/* <FormErrors errMsg={errors.keyword} touched={touched.keyword} /> */}
+    <FormErrors errMsg={errors.keyword} touched={touched.keyword} /> */}
                                 </div>
                                 {/* <!-- end card body --> */}
                             </div>
