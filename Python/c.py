@@ -5,22 +5,18 @@ import base64
 from urllib.parse import urljoin
 import time
 import pandas as pd
-
-scrap_list = pd.read_excel('data.xlsx')
-# print(scrap_list['search_list'][2])
-# scrapList = ["plants", "animals", "ocean-animals" ,"ocean-fish"]
-
-for lst in scrap_list['search_list'] :  
+scrapKeywords = pd.read_excel("data/scrapKeywords.xlsx")
+for lst in scrapKeywords['search_list'] :  
         # Prompt user for folder name
-    folder_name = input("Enter folder name: ")
-    folder_path = os.path.abspath(os.path.join("images", folder_name))
+    folder_name = lst
+    folder_path = os.path.abspath(os.path.join("dribble", folder_name))
 
     # Create folder if it doesn't exist
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
     # Prompt user for website link 
-    link = f"https://unsplash.com/s/photos/{lst}"
+    link = f"https://dribbble.com/search/{lst}"
 
     httpCount, dataCount, serverCount = 0, 0, 0
 
@@ -50,9 +46,8 @@ for lst in scrap_list['search_list'] :
 
     soup = BeautifulSoup(html_content, 'html.parser')
     div_by_data_test = None
-
     for x in soup.find_all("div"):
-        if x.get("data-test") == "search-photos-route":
+        if x.get("id") == "main":
             div_by_data_test = x
             count = last_index + 1
             img_tags = x.find_all("img")
@@ -68,6 +63,8 @@ for lst in scrap_list['search_list'] :
                         parts = src.split(",")
                         data = parts[1]
                         ext = parts[0].split(";")[0][len("data:image/"):]
+                        if ext == "gif" :
+                            continue
                         filename = time.strftime("%Y%m%d-%H%M%S") + f"_image{count}.{ext}"
                         file_path = os.path.abspath(os.path.join(folder_path, filename))
                         try:
@@ -109,3 +106,4 @@ for lst in scrap_list['search_list'] :
             print(dataCount)
             print(serverCount)
             break
+
