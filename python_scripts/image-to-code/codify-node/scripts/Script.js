@@ -12,3 +12,4 @@ pythonProcess.stdout.on('data', (data) => {
   const rectangles = JSON.parse(data.toString());
   console.log(rectangles);
 });
+x
