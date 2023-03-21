@@ -5,7 +5,6 @@ import numpy as np
 from shapely.geometry import Point, LineString, Polygon
 import matplotlib.pyplot as plt
 
-
 # Load the input image and convert it to grayscale
 input_img = cv2.imread("box.png")
 gray_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
