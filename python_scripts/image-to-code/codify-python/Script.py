@@ -18,12 +18,28 @@ contours, hierarchy = cv2.findContours(
 
 rectangles = []
 triangles = []
+rectangles_with_lines = []
 
 for contour in contours:
     approx = cv2.approxPolyDP(
         contour, 0.01 * cv2.arcLength(contour, True), True)
     if len(approx) == 4:  # Check if it's a rectangle
         rectangles.append(Polygon(approx.reshape((-1, 2))))
+    elif len(approx) == 3:  # Check if it's a triangle
+        triangles.append(Polygon(approx.reshape((-1, 2))))
+    elif len(approx) == 4:  # Check if it's a rectangle
+        # Get the coordinates of the four corners of the rectangle
+        x1, y1 = approx[0][0]
+        x2, y2 = approx[1][0]
+        x3, y3 = approx[2][0]
+        x4, y4 = approx[3][0]
+        
+        # Check if there are two vertical lines inside the rectangle
+        if (x1 == x2 and x3 == x4 and x1 != x3) or \
+           (x1 == x3 and x2 == x4 and x1 != x2) or \
+           (x1 == x4 and x2 == x3 and x1 != x2):
+               # Add the rectangle to the list of rectangles with two vertical lines
+               rectangles_with_lines.append(Polygon(approx.reshape((-1, 2))))
     elif len(approx) == 3:  # Check if it's a triangle
         triangles.append(Polygon(approx.reshape((-1, 2))))
 
@@ -64,6 +80,11 @@ for i, rectangle in rect_dict.items():
             tri_rectangles.append(i)
             break
 
+# Check if there are rectangles with two vertical lines inside
+if len(rectangles_with_lines) > 0:
+    # Create a button to indicate the presence of rectangles with two vertical lines
+    button_str = '<button style="position:fixed;bottom:10px;right:10px;padding:10px;">Rectangles with two vertical lines</button>'
+
 # Replace rectangles containing triangles with images
 div_temp = "<div style='height:#h#px;width:#w#px; background-color: #color#; position : fixed; left : #x#px; top : #y#px;'></div>"
 div_str = ""
@@ -75,17 +96,27 @@ for i, rect in rect_dict.items():
         height, width, _ = img.shape
         div_str += "<img src='#img#' style='height:#h#px;width:#w#px; background-size:cover; position : fixed; left : #x#px; top : #y#px;' />".replace("#h#", str(bottom-top)).replace("#w#", str(right-left)).replace(
             "#x#", str(left)).replace("#y#", str(top)).replace("#img#", 'a.jpg')
+    elif i in [r.vertices for r in rectangles_with_lines]:
+        # Add rectangle as div with a different color
+        div_str += div_temp.replace("#h#", str(bottom-top)).replace("#w#", str(right-left)).replace(
+            "#x#", str(left)).replace("#y#", str(top)).replace("#color#", 'blue')
     else:
         # Add rectangle as div
         div_str += div_temp.replace("#h#", str(bottom-top)).replace("#w#", str(right-left)).replace(
             "#x#", str(left)).replace("#y#", str(top)).replace("#color#", 'red')
 
+# Add the button to the HTML output
+if len(rectangles_with_lines) > 0:
+    div_str += button_str
+
+# Write the HTML output to file
 with open("code/index.html", "w") as wFile:
     wFile.write("""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible
+" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
