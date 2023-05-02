@@ -6,7 +6,7 @@ from shapely.geometry import Point, LineString, Polygon
 import matplotlib.pyplot as plt
 
 # Load the input image and convert it to grayscale
-input_img = cv2.imread("demo.png")
+input_img = cv2.imread("page.png")
 gray_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
 
 # Apply a threshold to the grayscale image to get a binary image
@@ -18,29 +18,59 @@ contours, hierarchy = cv2.findContours(
 
 rectangles = []
 triangles = []
-rectangles_with_yellow_colour = []
+circle = []
+cross_inside_rec = []
+div_str = ""
 
-# Define the lower and upper bounds of the yellow color in BGR format
-# lower_yellow = np.array([0, 200, 200])
-# upper_yellow = np.array([100, 255, 255])
+def is_contour_inside_rect(contour, rect):
+    x,y,w,h = rect
+    rect_area = w*h
+    contour_area = cv2.contourArea(contour)
+    # Check if the contour area is less than the rectangle area
+    # and the bounding rectangle of the contour is inside the rectangle
+    if contour_area < rect_area and rect[0] <= x and rect[1] <= y and rect[0]+rect[2] >= x+w and rect[1]+rect[3] >= y+h:
+        return True
+    else:
+        return False
 
 for contour in contours:
-    approx = cv2.approxPolyDP(
-        contour, 0.01 * cv2.arcLength(contour, True), True)
+    approx = cv2.approxPolyDP(contour, 0.01 * cv2.arcLength(contour, True), True)
     if len(approx) == 4:  # Check if it's a rectangle
         # Get the coordinates of the four corners of the rectangle
         x1, y1 = approx[0][0]
         x2, y2 = approx[1][0]
         x3, y3 = approx[2][0]
         x4, y4 = approx[3][0]
-        # Check if the rectangle is yellow
-        if np.array_equal(input_img[y1][x1], [0, 255, 255]):
-            rectangles_with_yellow_colour.append(Polygon(approx.reshape((-1, 2))))
-        else:
-            rectangles.append(Polygon(approx.reshape((-1, 2))))
+        rectangles.append(Polygon(approx.reshape((-1, 2))))
     elif len(approx) == 3:  # Check if it's a triangle
         triangles.append(Polygon(approx.reshape((-1, 2))))
+    elif len(approx) >= 5 and len(approx) <= 20:  # Check if it's a circle
+        area = cv2.contourArea(contour)
+        perimeter = cv2.arcLength(contour, True)
+        circularity = 4 * np.pi * area / (perimeter ** 2)
+        if circularity > 0.7:  # Set a threshold for circularity
+            center, radius = cv2.minEnclosingCircle(contour)
+            circle.append((center, radius))
+            x, y = int(center[0]), int(center[1])
+            r = int(radius)
 
+            div_str += f"<button style='height:{2*r}px;width:{2*r}px;border-radius:{r}px;background-color:green;position:fixed;left:{x-r}px;top:{y-r}px;'></button>"
+    else:  # Check if contour is inside the rectangle
+        rect = cv2.minAreaRect(contour)
+        if is_contour_inside_rect(contour, rect):
+            # Compute the minimum area bounding box for the contour
+            (x, y), (w, h), angle = rect
+
+            # Check if the bounding box has a cross shape
+            aspect_ratio = max(w, h) / min(w, h)
+            if aspect_ratio < 1.5 and abs(angle) > 75 and abs(angle) < 105:
+                # The contour has a plus sign shape
+                # Do something with it (e.g., draw a blue circle at its center)
+                center = (int(x), int(y))
+                radius = 10
+                cv2.circle(input_img, center, radius, (255, 0, 0), -1)
+                cross_inside_rec.append(center)
+# print(cross_inside_rec)
 # Reverse the order of the rectangles and output as JSON-formatted string
 rectangles.pop(-1)
 
@@ -70,7 +100,6 @@ num_triangles = len(triangles)
 
 # Create a dictionary to map each rectangle to its index
 rect_dict = {i: rect for i, rect in enumerate(rectangles)}
-
 # Find the rectangles containing triangles
 tri_rectangles = []
 for i, rectangle in rect_dict.items():
@@ -81,7 +110,6 @@ for i, rectangle in rect_dict.items():
 
 # Replace rectangles containing triangles with images
 div_temp = "<div style='height:#h#px;width:#w#px; background-color: #color#; position : fixed; left : #x#px; top : #y#px;'></div>"
-div_str = ""
 for i, rect in rect_dict.items():
     left, top, right, bottom = rect.bounds
     if i in tri_rectangles:
