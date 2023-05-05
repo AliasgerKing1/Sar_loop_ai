@@ -1,4 +1,5 @@
 # I:\Sar_loop_ai\python_scripts\image-to-code\codify-python
+# https://api.ocr.space/parse/imageurl?apikey=K81110801288957d&file=C:\Sar_loop_ai\python_scripts\image-to-code\codify-python\a.jpg&isOverlayRequired=true
 import os
 import cv2
 import numpy as np
@@ -19,7 +20,7 @@ contours, hierarchy = cv2.findContours(
 rectangles = []
 triangles = []
 circle = []
-cross_inside_rec = []
+star_inside_rect = []
 div_str = ""
 
 def is_contour_inside_rect(contour, rect):
@@ -54,23 +55,7 @@ for contour in contours:
             x, y = int(center[0]), int(center[1])
             r = int(radius)
 
-            div_str += f"<button style='height:{2*r}px;width:{2*r}px;border-radius:{r}px;background-color:green;position:fixed;left:{x-r}px;top:{y-r}px;'></button>"
-    else:  # Check if contour is inside the rectangle
-        rect = cv2.minAreaRect(contour)
-        if is_contour_inside_rect(contour, rect):
-            # Compute the minimum area bounding box for the contour
-            (x, y), (w, h), angle = rect
-
-            # Check if the bounding box has a cross shape
-            aspect_ratio = max(w, h) / min(w, h)
-            if aspect_ratio < 1.5 and abs(angle) > 75 and abs(angle) < 105:
-                # The contour has a plus sign shape
-                # Do something with it (e.g., draw a blue circle at its center)
-                center = (int(x), int(y))
-                radius = 10
-                cv2.circle(input_img, center, radius, (255, 0, 0), -1)
-                cross_inside_rec.append(center)
-# print(cross_inside_rec)
+            div_str += f"<button style='height:{2*r}px;width:{2*r}px;background-color:green;position:fixed;left:{x-r}px;top:{y-r}px;'></button>"
 # Reverse the order of the rectangles and output as JSON-formatted string
 rectangles.pop(-1)
 
