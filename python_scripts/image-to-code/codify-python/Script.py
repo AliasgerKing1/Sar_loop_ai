@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from shapely.geometry import Point, LineString, Polygon
 import matplotlib.pyplot as plt
+import requests
 
 # Load the input image and convert it to grayscale
 input_img = cv2.imread("page.png")
@@ -79,6 +80,22 @@ def is_shape_inside(shape, rect):
 
 num_rectangles = len(rectangles)
 num_triangles = len(triangles)
+
+
+
+
+
+response = requests.get("https://api.ocr.space/parse/imageurl?apikey=K81110801288957d&url=https://i.ibb.co/YckRR3S/page.png")
+
+
+if response.status_code == 200:
+    # Success: Extract text from the response
+    response_data = response.json()
+    parsed_text = response_data['ParsedResults'][0]['ParsedText']
+    print(parsed_text)
+else :
+    print("error")
+
 
 # print(f"Number of rectangles: {num_rectangles}")
 # print(f"Number of triangles: {num_triangles}")
