@@ -111,7 +111,7 @@ def detect_and_cut_rectangles(image_path, output_directory):
 div_str = ""
 
 # Example usage
-image_path = "new.png"
+image_path = "test.png"
 output_directory = "cut_image"
 rectangles = detect_and_cut_rectangles(image_path, output_directory)
 for i, rectangle in enumerate(rectangles):
@@ -120,7 +120,7 @@ for i, rectangle in enumerate(rectangles):
     # print(f"Width: {rectangle['width']}")
     # print(f"Height: {rectangle['height']}")
     # print(f"Saved image path: {rectangle['output_path']}")
-    response = requests.get(f"https://api.ocr.space/parse/imageurl?apikey=K86785686488957&url=https://7bd7-2409-4081-ab80-84a1-d878-8eff-574d-60ef.ngrok-free.app/cut_image/rectangle_{i+1}.png")
+    response = requests.get(f"https://api.ocr.space/parse/imageurl?apikey=K88096775188957&url=https://1538-2409-4081-9e89-2f65-f461-3835-2d79-6f84.ngrok-free.app/cut_image/rectangle_{i+1}.png")
 
 
     if response.status_code == 200:
@@ -139,12 +139,16 @@ for i, rectangle in enumerate(rectangles):
             "#x#", str(rectangles[i]['x'])).replace("#y#", str(rectangles[i]['y']))
         elif text == "button" :
             # print(rectangles[i])
-            div_str += "<button type='button' style='height:#h#px;width:#w#px; position : fixed; border : none;background-color : '#A45f882' left : #x#px; top : #y#px;'>button</button>".replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width'])).replace(
+            div_str += "<button type='button' style='height:#h#px;width:#w#px; position : fixed; left : #x#px; top : #y#px; background : #9C27B0; border : none; border-radius : 50%; color : #fff;'>button</button>".replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width'])).replace(
             "#x#", str(rectangles[i]['x'])).replace("#y#", str(rectangles[i]['y']))
         elif text == "sbutton" :
             # print(rectangles[i])
-            div_str += "<button type='submit' style='height:#h#px;width:#w#px; position : fixed; border : none;background-color : '#45f882' left : #x#px; top : #y#px;'>submit</button>".replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width'])).replace(
+            div_str += "<button type='submit' style='height:#h#px;width:#w#px; position : fixed; left : #x#px; top : #y#px; background : #9C27B0; border : none; border-radius : 50%; color : #fff;'>submit</button>".replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width'])).replace(
             "#x#", str(rectangles[i]['x'])).replace("#y#", str(rectangles[i]['y']))
+        elif text == "anchor" :
+            # print(rectangles[i])
+            div_str += "<a href='#' style='height:#h#px;width:#w#px; position : fixed; left : #x#px; top : #y#px; background : green; color : #fff; padding : #padi#;'>home</a>".replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width'])).replace(
+            "#x#", str(rectangles[i]['x'])).replace("#y#", str(rectangles[i]['y'])).replace("#padi#", str(rectangles[i]['height']/2))
     else :
         print("wait times ends")
         
