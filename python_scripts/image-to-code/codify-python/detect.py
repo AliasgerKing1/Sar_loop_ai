@@ -51,14 +51,22 @@ import cv2
 import os
 import requests
 
-btn_clr = "#45f882"
-btn_text = ["about", "home"]
-btn_text = ["car", "bus", "truck", "book"]
-
+anchor = []
+anchor2 = []
+anchor3 = []
 def detect_and_cut_rectangles(image_path, output_directory):
     # Load the image
     image = cv2.imread(image_path)
-
+    
+    # Get the width and height
+    width1, height1, channels = image.shape
+    anchor.append(width1*0.6)
+    anchor.append(height1*0.4)
+    anchor2.append(width1*0.4)
+    anchor2.append(height1*0.4)
+    anchor3.append(width1*0.5)
+    anchor3.append(height1*0.4)
+    
     # Convert the image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -109,9 +117,10 @@ def detect_and_cut_rectangles(image_path, output_directory):
 
 # Generate HTML code based on the detected text
 div_str = ""
-
+navUl = 0
+nav_text = ["", "about", "contact", "services", "shop", "tournaments", "pricing"]
 # Example usage
-image_path = "test.png"
+image_path = "test2.png"
 output_directory = "cut_image"
 rectangles = detect_and_cut_rectangles(image_path, output_directory)
 for i, rectangle in enumerate(rectangles):
@@ -120,7 +129,7 @@ for i, rectangle in enumerate(rectangles):
     # print(f"Width: {rectangle['width']}")
     # print(f"Height: {rectangle['height']}")
     # print(f"Saved image path: {rectangle['output_path']}")
-    response = requests.get(f"https://api.ocr.space/parse/imageurl?apikey=K88096775188957&url=https://1538-2409-4081-9e89-2f65-f461-3835-2d79-6f84.ngrok-free.app/cut_image/rectangle_{i+1}.png")
+    response = requests.get(f"https://api.ocr.space/parse/imageurl?apikey=K85315406988957&url=https://1687-183-87-13-12.ngrok-free.app/cut_image/rectangle_{i+1}.png")
 
 
     if response.status_code == 200:
@@ -145,15 +154,67 @@ for i, rectangle in enumerate(rectangles):
             # print(rectangles[i])
             div_str += "<button type='submit' style='height:#h#px;width:#w#px; position : fixed; left : #x#px; top : #y#px; background : #9C27B0; border : none; border-radius : 50%; color : #fff;'>submit</button>".replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width'])).replace(
             "#x#", str(rectangles[i]['x'])).replace("#y#", str(rectangles[i]['y']))
-        elif text == "anchor" :
+        elif text == "image" :
             # print(rectangles[i])
-            div_str += "<a href='#' style='height:#h#px;width:#w#px; position : fixed; left : #x#px; top : #y#px; background : green; color : #fff; padding : #padi#;'>home</a>".replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width'])).replace(
-            "#x#", str(rectangles[i]['x'])).replace("#y#", str(rectangles[i]['y'])).replace("#padi#", str(rectangles[i]['height']/2))
+            div_str += "<img src='a.jpg' style='height:#h#px;width:#w#px; />".replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width']))
+        elif text == "anchor":
+            if rectangles[i]['y'] < anchor[1] and rectangles[i]['x'] > anchor[0]:
+                if navUl == 0:
+                    div_str += """<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>"""
+                else:
+                    div_str += """<li class="nav-item">
+          <a class="nav-link" href="#">#txt#</a>
+        </li>""".replace("#txt#", nav_text[i])
+        # .replace("#h#", str(rectangles[i]['height'])).replace("#w#", str(rectangles[i]['width'])).replace("#x#", str(rectangles[i]['x'])).replace("#y#", str(rectangles[i]['y']))
+                navUl += 1
+            elif rectangles[i]['y'] < anchor2[1] and rectangles[i]['x'] < anchor2[0]:
+                if navUl == 0:
+                    div_str += """<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>"""
+                else:
+                    div_str += """<li class="nav-item">
+          <a class="nav-link" href="#">#txt#</a>
+        </li>""".replace("#txt#", nav_text[i])
+                navUl += 1
+
+            elif rectangles[0]['y'] < anchor3[1] and rectangles[0]['x'] < anchor3[0] and rectangles[-1]['x'] > anchor3[0]:
+                if navUl == 0:
+                    div_str += """<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav justify-content-center mb-2 mb-lg-0" > <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>"""
+                else:
+                    div_str += """<li class="nav-item">
+          <a class="nav-link" href="#">#txt#</a>
+        </li>""".replace("#txt#", nav_text[i])
+                navUl += 1
+
     else :
-        print("wait times ends")
-        
-        
-        
+        print("wait times end")
+     
 # # Write the HTML output to file
 with open("code/index.html", "w") as wFile:
     wFile.write("""<!DOCTYPE html>
@@ -163,9 +224,13 @@ with open("code/index.html", "w") as wFile:
     <meta http-equiv="X-UA-Compatible
 " content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--bootstrap css-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" .>
     <title>Document</title>
 </head>
-<body style="position : relative">
+<body>
     #div# 
+            <!--bootstrap js-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>""".replace("#div#", div_str))
